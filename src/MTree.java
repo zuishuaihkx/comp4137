@@ -1,4 +1,8 @@
-public class MerkleTree {
+import java.security.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MTree {
 
     public static String sha256(String data) {
         try {
