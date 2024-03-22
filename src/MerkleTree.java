@@ -74,11 +74,42 @@ public class MerkleTree {
     public static void main(String[] args) {
         BlockchainAccount a = new BlockchainAccount();
         BlockchainAccount b = new BlockchainAccount();
-        String coin="10";
-        String sig=a.generateDigitalSignature(coin);
-        String data=coin+":"+sig;
-        Transaction one=new Transaction(data,a.getPublicKey(),b.getPublicKey());
+        BlockchainAccount c =new BlockchainAccount();
 
+//        Transaction one
+        String one_coin="10";
+        String one_sig=a.generateDigitalSignature(one_coin);
+        String one_data=one_coin+":"+one_sig;
+        Transaction one=new Transaction(one_data,a.getPublicKey(),b.getPublicKey());
+
+//        Transaction two
+        String two_coin="11";
+        String two_sig=b.generateDigitalSignature(two_coin);
+        String two_data=two_coin+":"+two_sig;
+        Transaction two=new Transaction(two_data,b.getPublicKey(),a.getPublicKey());
+
+//        Transaction three
+        String three_coin="12";
+        String three_sig=a.generateDigitalSignature(three_coin);
+        String three_data=three_coin+":"+three_sig;
+        Transaction three=new Transaction(three_data,a.getPublicKey(),c.getPublicKey());
+
+//        Transaction one
+        String four_coin="13";
+        String four_sig=c.generateDigitalSignature(four_coin);
+        String four_data=four_coin+":"+four_sig;
+        Transaction four=new Transaction(four_data,c.getPublicKey(),b.getPublicKey());
+
+        List<Transaction> transacations=new ArrayList<>();
+        transacations.add(one);
+        transacations.add(two);
+        transacations.add(three);
+        transacations.add(four);
+
+        MerkleTree tree= new MerkleTree(transacations);
+        System.out.println(tree.getRoot().getValue());
+
+        
 
 
 
