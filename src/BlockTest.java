@@ -5,8 +5,8 @@ public class test {
     public static void main(String[] args) {
         // Create transactions
         BlockchainAccount a = new BlockchainAccount("AccountA");
-        BlockchainAccount b = new BlockchainAccount("AccountB);
-        BlockchainAccount c = new BlockchainAccount(AccountC);
+        BlockchainAccount b = new BlockchainAccount("AccountB");
+        BlockchainAccount c = new BlockchainAccount("AccountC");
 
         String one_coin = "10";
         String one_sig = a.generateDigitalSignature(one_coin);
