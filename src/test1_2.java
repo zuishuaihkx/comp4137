@@ -76,13 +76,13 @@ public class test1_2 {
                                 break;
                             }
                         }
+
+                        if (!find_receiver) {
+                            System.out.println("receiver is not exist");
+                        }
                     }
                     else {
                         System.out.println("input coin should be integer or float");
-                    }
-
-                    if (!find_receiver) {
-                        System.out.println("receiver is not exist");
                     }
 
                 } else {
