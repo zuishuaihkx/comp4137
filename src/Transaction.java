@@ -1,6 +1,8 @@
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Scanner;
 public class Transaction {
     private String data;
     private String input;
