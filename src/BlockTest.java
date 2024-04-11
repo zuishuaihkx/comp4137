@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class test {
+public class BlockTest {
     public static void main(String[] args) {
         // Create transactions
         BlockchainAccount a = new BlockchainAccount("AccountA");
