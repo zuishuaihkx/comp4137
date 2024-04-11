@@ -26,10 +26,13 @@ public class test1_2 {
 //        BlockchainAccount c =new BlockchainAccount();
         ArrayList<BlockchainAccount> Account = new ArrayList<>();
         ArrayList<Transaction> transactions = new ArrayList<>();
+        MerkleTree merkletree=null;
+        BlockChain blockchain = null;
+
         while (true) {
             System.out.println("");
             Scanner scanner = new Scanner(System.in);
-            System.out.println("What do you want to do? 1: Create Account ; 2: Create transaction ; 3: build MerkleTree ");
+            System.out.println("What do you want to do? 1: Create Account ; 2: Create transaction ; 3: build MerkleTree ; 4: build Block and BlockChain");
             String choice = scanner.nextLine();
             if (choice.equals("1")) {
                 System.out.println("please input account name: ");
@@ -89,11 +92,25 @@ public class test1_2 {
             }
             if (choice.equals("3")) {
                 MerkleTree tree= new MerkleTree(transactions);
-                System.out.println(tree.getRoot().getValue());
-                tree.printTree();
+                Boolean success = tree.generateTree();
+                if (success) {
+                    merkletree = tree;
+                    System.out.println(tree.getRoot().getValue());
+                    tree.printTree();
+                    transactions.clear();
+                }
             }
-
-
+            if (choice.equals("4")) {
+                if (blockchain==null) {
+                    Block block = new Block(merkletree, "0");
+                    blockchain = new BlockChain(block);
+                }else {
+                    Block block = new Block(merkletree,blockchain.getLastBlock().getHash());
+                    blockchain.addBlock(block);
+                    blockchain.getLastBlock().nextBlock = block;
+                }
+                blockchain.printBlockChain();
+            }
         }
     }
 }
