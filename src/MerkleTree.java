@@ -16,9 +16,24 @@ public class MerkleTree {
     private List<Transaction> transactions;
     public MerkleTree(List<Transaction> transactions) {
         this.transactions = transactions;
-        generateTree();
     }
 
+    public static boolean isPowerOfTwo(int n) {
+        return n > 0 && (n & (n - 1)) == 0;
+    }
+
+    public static int toNextPowerOfTwo(int number) {
+        if (number > 0 && (number & (number - 1)) == 0) {
+            return 0;
+        }
+
+        int power = 1;
+        while (power < number) {
+            power <<= 1;
+        }
+
+        return power - number;
+    }
     public List<MerkleNode> generateLeafNode(List<Transaction> transactions) {
         List<MerkleNode> leaf = new ArrayList<>();
         for(Transaction i : transactions) {
@@ -28,24 +43,37 @@ public class MerkleTree {
         }
         return leaf;
     }
-    public void generateTree() {
-        List<MerkleNode> original = generateLeafNode(this.transactions);
+    public boolean generateTree() {
+        if(isPowerOfTwo(transactions.size()) && transactions.size()!=1) {
+            List<MerkleNode> original = generateLeafNode(this.transactions);
+            while (true) {
+                List<MerkleNode> generate = new ArrayList<>();
+                for (int i = 0; i < original.size()-1; i+=2) {
+                    String value = original.get(i).getValue() + original.get(i+1).getValue();
+                    MerkleNode generateNode = new MerkleNode(sha256(value));
+                    generate.add(generateNode);
+                    generateNode.setLeftNode(original.get(i));
+                    generateNode.setRightNode(original.get(i+1));
+                }
 
-        while (true) {
-            List<MerkleNode> generate = new ArrayList<>();
-            for (int i = 0; i < original.size()-1; i+=2) {
-                String value = original.get(i).getValue() + original.get(i+1).getValue();
-                MerkleNode generateNode = new MerkleNode(sha256(value));
-                generate.add(generateNode);
-                generateNode.setLeftNode(original.get(i));
-                generateNode.setRightNode(original.get(i+1));
+                if (generate.isEmpty()) {
+                    this.root = original.get(0);
+                }
+                else if (generate.size() <= 1) {
+                    this.root = generate.get(0);
+                    break;
+                }
+                original = generate;
             }
-            original = generate;
-            if (generate.size() == 1) {
-                this.root = generate.get(0);
-                break;
-            }
+            return true;
         }
+        else {
+            System.out.println("the transaction should be power of two");
+            String number = Integer.toString(toNextPowerOfTwo(transactions.size()));
+            System.out.println("you should add "+number+"transactions");
+            return false;
+        }
+
     }
 
     public MerkleNode getRoot() {

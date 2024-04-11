@@ -2,6 +2,23 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class test1_2 {
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isFloat(String s) {
+        try {
+            Float.parseFloat(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
     public static void main(String[] args) {
 //        BlockchainAccount a = new BlockchainAccount();
@@ -42,19 +59,25 @@ public class test1_2 {
                 if (find_user) {
                     System.out.println("Enter value you want to transfer");
                     String coin = scanner.nextLine();
-                    String sig = user.generateDigitalSignature(coin);
-                    String data = coin + ":" + sig;
-                    System.out.println("Enter receiver address(public key)");
-                    String address = scanner.nextLine();
-                    for (int j = 0; j < Account.size(); j++) {
-                        if (Account.get(j).getPublicKey().equals(address)) {
-                            Transaction one = new Transaction(data, user.getPublicKey(), address);
-                            System.out.println("Transaction successfully");
-                            transactions.add(one);
-                            find_receiver = true;
-                            break;
+                    if (isFloat(coin) || isInteger(coin)){
+                        String sig = user.generateDigitalSignature(coin);
+                        String data = coin + ":" + sig;
+                        System.out.println("Enter receiver address(public key)");
+                        String address = scanner.nextLine();
+                        for (int j = 0; j < Account.size(); j++) {
+                            if (Account.get(j).getPublicKey().equals(address)) {
+                                Transaction one = new Transaction(data, user.getPublicKey(), address);
+                                System.out.println("Transaction successfully");
+                                transactions.add(one);
+                                find_receiver = true;
+                                break;
+                            }
                         }
                     }
+                    else {
+                        System.out.println("input coin should be integer or float");
+                    }
+
                     if (!find_receiver) {
                         System.out.println("receiver is not exist");
                     }
@@ -72,6 +95,5 @@ public class test1_2 {
 
 
         }
-
     }
 }
