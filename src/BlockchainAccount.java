@@ -7,9 +7,11 @@ public class BlockchainAccount {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
+    private String name;
+
 
     //Elliptic Curve Cryptography
-    public BlockchainAccount() {
+    public BlockchainAccount(String name) {
         try {
 // Get the key generator and using the specific parameter to initiate generator
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EC");
@@ -20,10 +22,15 @@ public class BlockchainAccount {
             KeyPair keyPair = keyGen.generateKeyPair();
             this.privateKey = keyPair.getPrivate();
             this.publicKey = keyPair.getPublic();
+            this.name = name;
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     // Get the Base64 encoded public key.

@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Base64;
 import java.security.*;
+import java.util.LinkedList;
+import java.util.Queue;
 public class MerkleTree {
+
+
 
     private MerkleNode root = null;
 
@@ -18,7 +22,9 @@ public class MerkleTree {
     public List<MerkleNode> generateLeafNode(List<Transaction> transactions) {
         List<MerkleNode> leaf = new ArrayList<>();
         for(Transaction i : transactions) {
-            leaf.add(new MerkleNode(sha256(i.getTransaction_id())));
+            MerkleNode leafNode = new MerkleNode(sha256(i.getTransaction_id()));
+            leafNode.setTransaction(i);
+            leaf.add(leafNode);
         }
         return leaf;
     }
@@ -27,7 +33,7 @@ public class MerkleTree {
 
         while (true) {
             List<MerkleNode> generate = new ArrayList<>();
-            for (int i = 0; i < original.size()-1; i++) {
+            for (int i = 0; i < original.size()-1; i+=2) {
                 String value = original.get(i).getValue() + original.get(i+1).getValue();
                 MerkleNode generateNode = new MerkleNode(sha256(value));
                 generate.add(generateNode);
@@ -71,47 +77,65 @@ public class MerkleTree {
         }
 
     }
-    public static void main(String[] args) {
-        BlockchainAccount a = new BlockchainAccount();
-        BlockchainAccount b = new BlockchainAccount();
-        BlockchainAccount c =new BlockchainAccount();
-
-//        Transaction one
-        String one_coin="10";
-        String one_sig=a.generateDigitalSignature(one_coin);
-        String one_data=one_coin+":"+one_sig;
-        Transaction one=new Transaction(one_data,a.getPublicKey(),b.getPublicKey());
-
-//        Transaction two
-        String two_coin="11";
-        String two_sig=b.generateDigitalSignature(two_coin);
-        String two_data=two_coin+":"+two_sig;
-        Transaction two=new Transaction(two_data,b.getPublicKey(),a.getPublicKey());
-
-//        Transaction three
-        String three_coin="12";
-        String three_sig=a.generateDigitalSignature(three_coin);
-        String three_data=three_coin+":"+three_sig;
-        Transaction three=new Transaction(three_data,a.getPublicKey(),c.getPublicKey());
-
-//        Transaction one
-        String four_coin="13";
-        String four_sig=c.generateDigitalSignature(four_coin);
-        String four_data=four_coin+":"+four_sig;
-        Transaction four=new Transaction(four_data,c.getPublicKey(),b.getPublicKey());
-
-        List<Transaction> transacations=new ArrayList<>();
-        transacations.add(one);
-        transacations.add(two);
-        transacations.add(three);
-        transacations.add(four);
-
-        MerkleTree tree= new MerkleTree(transacations);
-        System.out.println(tree.getRoot().getValue());
-
-        
-
-
-
+    public void printTree() {
+        printSubtree(root, 0); // 从根节点开始，层级为0
     }
+
+    private void printSubtree(MerkleNode node, int level) {
+        if (node == null) {
+            return; // 空节点不打印
+        }
+        // 打印当前节点的值，使用"--"来表示层级深度
+        for (int i = 0; i < level; i++) {
+            System.out.print("--"); // 层级深度的表示
+        }
+        System.out.println(node.getValue());
+        // 递归打印左子树，层级加1
+        printSubtree(node.getLeftNode(), level + 1);
+        // 递归打印右子树，层级加1
+        printSubtree(node.getRightNode(), level + 1);
+    }
+
+//    public static void main(String[] args) {
+//        BlockchainAccount a = new BlockchainAccount();
+//        BlockchainAccount b = new BlockchainAccount();
+//        BlockchainAccount c =new BlockchainAccount();
+//
+////        Transaction one
+//        String one_coin="10";
+//        String one_sig=a.generateDigitalSignature(one_coin);
+//        String one_data=one_coin+":"+one_sig;
+//        Transaction one=new Transaction(one_data,a.getPublicKey(),b.getPublicKey());
+//
+////        Transaction two
+//        String two_coin="11";
+//        String two_sig=b.generateDigitalSignature(two_coin);
+//        String two_data=two_coin+":"+two_sig;
+//        Transaction two=new Transaction(two_data,b.getPublicKey(),a.getPublicKey());
+//
+////        Transaction three
+//        String three_coin="12";
+//        String three_sig=a.generateDigitalSignature(three_coin);
+//        String three_data=three_coin+":"+three_sig;
+//        Transaction three=new Transaction(three_data,a.getPublicKey(),c.getPublicKey());
+//
+////        Transaction one
+//        String four_coin="13";
+//        String four_sig=c.generateDigitalSignature(four_coin);
+//        String four_data=four_coin+":"+four_sig;
+//        Transaction four=new Transaction(four_data,c.getPublicKey(),b.getPublicKey());
+//
+//        List<Transaction> transacations=new ArrayList<>();
+//        transacations.add(one);
+//        transacations.add(two);
+//        transacations.add(three);
+//        transacations.add(four);
+//
+//        MerkleTree tree= new MerkleTree(transacations);
+//        System.out.println(tree.getRoot().getValue());
+//
+//        tree.printTree();
+//
+//
+//    }
 }
